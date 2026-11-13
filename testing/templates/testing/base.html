@@ -1,0 +1,108 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestFlow</title>
+
+    <link rel="stylesheet" href="{% static 'testing/css/base.css' %}">
+<link rel="stylesheet" href="{% static 'testing/css/sidebar.css' %}">
+
+{% block extra_css %}
+{% endblock %}
+
+</head>
+<body>
+    <div class="wrapper">
+
+        <aside class="aside_panel">
+
+            <div class="aside_header">
+                <h2>TesеSystem</h2>
+            </div>
+
+            <div class="aside_main">
+                
+            <nav class="navigation">
+                <ul class="nav_list">
+
+                    <li class="nav_list_element">
+                        <a href="{% url 'device_list' %}"
+                        class="element_link {% if request.resolver_match.url_name == 'device_list' or request.resolver_match.url_name == 'devices' %}active{% endif %}">
+                            <span class="icon"></span>
+                            <span class="link_text">Устройства</span>
+                        </a>
+                    </li>
+
+                    <li class="nav_list_element">
+                        <a href="{% url 'test_session' %}"
+                        class="element_link {% if request.resolver_match.url_name == 'test_session' or request.resolver_match.url_name == 'start_testing' %}active{% endif %}">
+                            <span class="icon"></span>
+                            <span class="link_text">Тестирование</span>
+                        </a>
+                    </li>
+
+                    <li class="nav_list_element">
+                        <a href="{% url 'history' %}"
+                        class="element_link {% if request.resolver_match.url_name == 'history' %}active{% endif %}">
+                            <span class="icon"></span>
+                            <span class="link_text">История</span>
+                        </a>
+                    </li>
+
+                    <li class="nav_list_element">
+                        <a href="{% url 'models_page' %}"
+                        class="element_link {% if request.resolver_match.url_name == 'models_page' %}active{% endif %}">
+                            <span class="icon"></span>
+                            <span class="link_text">Модели</span>
+                        </a>
+                    </li>
+
+                    <li class="nav_list_element">
+                        <a href="{% url 'plan_settings' %}"
+                        class="element_link {% if request.resolver_match.url_name == 'plan_settings' or request.resolver_match.url_name == 'settings_page' %}active{% endif %}">
+                            <span class="icon"></span>
+                            <span class="link_text">Настройки</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            </div>
+
+            <div class="aside_footer">
+                {% if user.is_authenticated %}
+                    <div class="sidebar_user">
+                        <div class="sidebar_user_info">
+                            <span class="sidebar_user_label">Пользователь</span>
+                            <strong>{{ user.username }}</strong>
+                        </div>
+
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="sidebar_logout">
+                                Выйти
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+        </aside>
+
+        <main class="main_panel">
+            <div class="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>

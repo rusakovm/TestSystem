@@ -1,0 +1,206 @@
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/testing.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="testing_page">
+
+    <header class="testing_header">
+        <span class="page_breadcrumb">
+            ТЕСТИРОВАНИЕ
+        </span>
+
+        <h1 class="page_title">
+            Тестирование устройства
+        </h1>
+    </header>
+
+    <section class="device_card">
+
+
+        <form method="get" class="device_form">
+            <label for="serial_number" class="field_label">
+                Серийный номер
+            </label>
+
+            <select id="serial_number" name="serial_number" class="device_select" onchange="this.form.requestSubmit()">
+                {% for item in devices %}
+                <option value="{{ item.serial_number }}" {% if device and item.pk == device.pk %}selected{% endif %}>
+                    {{ item.serial_number }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <noscript>
+                <button type="submit">Выбрать устройство</button>
+            </noscript>
+
+        </form>
+
+        {% if device %}
+        <form method="post" action="{% url 'start_testing' %}" class="start_test_form">
+            {% csrf_token %}
+            <input type="hidden" name="serial_number" value="{{ device.serial_number }}">
+            <button type="submit" class="start_test_button">
+                Начать тестирование
+            </button>
+        </form>
+        {% endif %}
+
+        {% if device %}
+        <h2 class="device_name">
+            {{ device.model.name }}
+        </h2>
+
+        {% if session %}
+        <span class="device_status">
+            {{ session.get_status_display }}
+        </span>
+        {% else %}
+        <span class="device_status">
+            Тестирование ещё не проводилось
+        </span>
+        {% endif %}
+
+        {% else %}
+        <p>Устройства не найдены.</p>
+        {% endif %}
+
+    </section>
+
+    <section class="test_plan">
+
+
+        
+
+            <div class="test_plan_header">
+
+                <h2 class="section_title">
+                    План тестирования
+                </h2>
+
+                <span class="progress_text">
+                    {{ completed_tests }} / {{ total_tests }}
+                </span>
+
+            </div>
+
+            <div class="progress_bar" role="progressbar" aria-label="Прогресс тестирования" aria-valuemin="0"
+                aria-valuemax="100" aria-valuenow="{{ progress|default:0 }}">
+                <div class="progress_fill" style="width: {{ progress|default:0 }}%;"></div>
+            </div>
+
+            <div class="test_list">
+
+                
+            {% for run in test_runs %}
+
+            <article class="test_card">
+
+                <div class="test_card_info">
+
+                    <h3 class="test_name">
+                        {{ run.test.code }}
+                    </h3>
+
+                    <p class="test_description">
+                        {{ run.test.name }}
+                    </p>
+
+                    <span class="test_mode">
+                        Тест
+                    </span>
+
+                </div>
+
+                <div class="test_card_result">
+
+                    <span class="test_status
+                        {% if run.status == 'passed' %}
+                            test_status_passed
+                        {% elif run.status == 'failed' %}
+                            test_status_failed
+                        {% elif run.status == 'running' %}
+                            test_status_running
+                        {% else %}
+                            test_status_pending
+                        {% endif %}
+                    ">
+                        {{ run.get_status_display }}
+                    </span>
+
+                    <div class="test_values">
+                        {% for result in run.results.all %}
+                            <div class="test_result_item">
+                                <span class="result_name">
+                                    {{ result.name }}
+                                </span>
+                                <span class="result_value">
+                                    {{ result.value }} {{ result.unit }}
+                                </span>
+                            </div>
+                        {% empty %}
+                            <span class="test_value">—</span>
+                        {% endfor %}
+                    </div>
+
+                    {% if session.status == "running" %}
+                    <form method="post"
+                        action="{% url 'update_test_status' %}"
+                        class="test_actions">
+
+                        {% csrf_token %}
+
+                        <input type="hidden"
+                            name="test_run_id"
+                            value="{{ run.pk }}">
+
+                        <div class="test_comment">
+                            <label for="comment_{{ run.pk }}">
+                                Комментарий (необязательно)
+                            </label>
+
+                            <textarea
+                                id="comment_{{ run.pk }}"
+                                name="comment"
+                                rows="2"
+                                placeholder="Комментарий к результату теста"></textarea>
+                        </div>
+
+                        <div class="test_action_buttons">
+                            <button type="submit"
+                                    name="status"
+                                    value="passed"
+                                    class="test_pass_button">
+                                Пройден
+                            </button>
+
+                            <button type="submit"
+                                    name="status"
+                                    value="failed"
+                                    class="test_fail_button">
+                                Ошибка
+                            </button>
+                        </div>
+
+                    </form>
+                    {% endif %}
+
+                </div>
+            </article>
+            {% empty %}
+            <p class="empty_message">
+                Для этой сессии тесты не найдены.
+            </p>
+            {% endfor %}
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

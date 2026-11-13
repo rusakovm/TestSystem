@@ -1,0 +1,80 @@
+
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/history.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="history_page">
+    <header class="history_header">
+        <span class="history_breadcrumb">
+            ИСТОРИЯ #{{ session.pk }}
+        </span>
+        <h1>Результаты тестирования</h1>
+        <p>Просмотр сохранённой сессии</p>
+    </header>
+    <section class="history_panel">
+        <div class="history_detail_top">
+            <div>
+                <span class="history_label">Серийный номер</span>
+                <h2>{{ session.device.serial_number }}</h2>
+                <p>{{ session.device.model.name }}</p>
+            </div>
+            <span class="history_badge history_{{ session.status }}">
+                {{ session.get_status_display }}
+            </span>
+        </div>
+        <div class="history_meta">
+            <div>
+                <span>Начало</span>
+                <strong>{{ session.started_at|date:"d.m.Y H:i" }}</strong>
+            </div>
+
+            <div>
+                <span>Завершение</span>
+                <strong>
+                    {% if session.finished_at %}
+                        {{ session.finished_at|date:"d.m.Y H:i" }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </strong>
+            </div>
+        </div>
+        <h3 class="history_tests_title">Результаты проверок</h3>
+        {% for run in test_runs %}
+        <div class="history_test_card">
+            <div class="history_test_top">
+                <div>
+                    <h3>{{ run.test.name }}</h3>
+                    <span>{{ run.test.code }}</span>
+                </div>
+                <span class="history_badge history_{{ run.status }}">
+                    {{ run.get_status_display }}
+                </span>
+            </div>
+            {% for result in run.results.all %}
+            <div class="history_result">
+                <span>{{ result.name }}</span>
+                <strong>{{ result.value }} {{ result.unit }}</strong>
+            </div>
+            {% empty %}
+            <p class="history_no_result">
+                Дополнительных результатов нет.
+            </p>
+            {% endfor %}
+        </div>
+        {% empty %}
+        <p class="history_no_result">
+            В этой сессии нет тестов.
+        </p>
+        {% endfor %}
+
+        <a href="{% url 'history' %}" class="history_back">
+            ← Вернуться к истории
+        </a>
+    </section>
+</div>
+{% endblock %}

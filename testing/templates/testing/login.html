@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Вход — TestSystem</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #101a23;
+            color: #e8f0f5;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .login_card {
+            width: 100%;
+            max-width: 420px;
+            padding: 36px;
+            background: #1d2d39;
+            border: 1px solid #344958;
+            border-radius: 16px;
+        }
+
+        h1 { margin: 0 0 8px; }
+
+        .subtitle {
+            color: #91a5b5;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #15242e;
+            border: 1px solid #344958;
+            border-radius: 9px;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 26px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #4dd4b0;
+            color: #10242b;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #fca5a5;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login_card">
+        <h1>TestFlow</h1>
+        <p class="subtitle">Авторизация оператора</p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <p class="error">
+                    Неверный логин или пароль.
+                </p>
+            {% endif %}
+            <label for="username">Логин</label>
+            <input
+                id="username"
+                type="text"
+                name="username"
+                autocomplete="username"
+                required
+                autofocus
+            >
+            <label for="password">Пароль</label>
+            <input
+                id="password"
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                required
+            >
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</body>
+</html>

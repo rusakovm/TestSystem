@@ -1,0 +1,363 @@
+
+.testing_page {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: 100%;
+}
+
+.testing_header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Карточка устройства */
+
+.device_card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+
+    width: 100%;
+    padding: 24px;
+
+    background-color: #1d2b36;
+    border: 1px solid #30414d;
+    border-radius: 14px;
+}
+.test_status_passed {
+    color: #55d7af;
+}
+
+.device_select {
+    width: 100%;
+    padding: 12px 16px;
+
+    background-color: #1d2b36;
+    color: #f0f4f7;
+    border: 1px solid #40525e;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 18px;
+}
+
+.device_name {
+    margin: 6px 0 0;
+}
+
+/* План тестирования */
+
+.test_plan {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+}
+
+.test_plan_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.progress_bar {
+    width: 100%;
+    height: 10px;
+
+    background-color: #344550;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress_fill {
+    height: 100%;
+    background-color: #55d7af;
+    border-radius: inherit;
+}
+
+/* Карточки тестов */
+
+.test_list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.test_card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 20px;
+    min-height: 130px;
+
+    width: 100%;
+    padding: 20px;
+
+    background-color: #1d2b36;
+    border: 1px solid #30414d;
+    border-radius: 10px;
+}
+
+.test_card_info {
+    gap: 8px;
+}
+
+.test_card_result {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    flex-shrink: 0;
+    min-width: 120px;
+    text-align: right;
+}
+
+.test_values {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.test_value {
+    font-size: 14px;
+    color: #d8e2e8;
+}
+
+.test_result_item {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.result_name {
+    font-size: 13px;
+    color: #8295a3;
+}
+
+.result_value {
+    font-size: 14px;
+    color: #d8e2e8;
+}
+.device_form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}.start_test_form {
+    margin-top: 20px;
+}
+
+.start_test_button {
+    padding: 12px 22px;
+    background: #55d7af;
+    color: #101820;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.start_test_button:hover {
+    background: #43bd99;
+}
+
+.test_actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.test_pass_button,
+.test_fail_button {
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.test_pass_button {
+    background: #163b30;
+    color: #69dfad;
+    border-color: #28644e;
+}
+
+.test_fail_button {
+    background: #402027;
+    color: #ff929e;
+    border-color: #713641;
+}
+
+.test_pass_button:hover {
+    background: #205442;
+}
+
+.test_fail_button:hover {
+    background: #5a2933;
+}
+
+.test_actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.test_pass_button,
+.test_fail_button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.test_pass_button {
+    background: #183e35;
+    color: #4fd1aa;
+    border: 1px solid #2d6a58;
+}
+
+.test_fail_button {
+    background: #43252d;
+    color: #ff929e;
+    border: 1px solid #75404b;
+}
+
+.test_pass_button:hover {
+    background: #245447;
+}
+
+.test_fail_button:hover {
+    background: #59303a;
+}
+.test_actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.test_pass_button,
+.test_fail_button {
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.test_pass_button {
+    background: #174b3b;
+    color: #6ee7b7;
+    border-color: #276749;
+}
+
+.test_pass_button:hover {
+    background: #216b52;
+}
+
+.test_fail_button {
+    background: #50232d;
+    color: #fda4af;
+    border-color: #8b3547;
+}
+
+.test_fail_button:hover {
+    background: #713040;
+}
+.test_result_fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.test_parameter {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.test_parameter label {
+    color: #aabac7;
+    font-size: 13px;
+}
+
+.test_parameter input,
+.test_parameter select {
+    background: #172631;
+    color: #e8f0f5;
+    border: 1px solid #344958;
+    border-radius: 8px;
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.test_parameter input:focus,
+.test_parameter select:focus {
+    outline: none;
+    border-color: #4dd4b0;
+}
+
+/* Расположение элементов карточки теста */
+.test_card_result .test_actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+}
+
+/* Комментарий */
+.test_card_result .test_comment {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.test_card_result .test_comment label {
+    color: #aabac7;
+    font-size: 13px;
+}
+
+.test_card_result .test_comment textarea {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    background: #172631;
+    color: #e8f0f5;
+    border: 1px solid #344958;
+    border-radius: 8px;
+    font: inherit;
+    resize: vertical;
+}
+
+.test_card_result .test_comment textarea:focus {
+    outline: none;
+    border-color: #4dd4b0;
+}
+
+/* Кнопки */
+.test_card_result .test_action_buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

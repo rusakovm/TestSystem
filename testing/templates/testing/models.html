@@ -1,0 +1,209 @@
+
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/models.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="models_page">
+
+    {% for message in messages %}
+        {% if "model" in message.tags %}
+            <div class="model_notice">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+
+    <header class="models_header">
+        <span class="models_breadcrumb">
+            МОДЕЛИ
+        </span>
+        <h1>Модели устройств</h1>
+        <p>Каталог моделей оборудования TestFlow</p>
+    </header>
+
+    <section class="models_panel">
+
+        <div class="models_toolbar">
+            <div>
+                <h2>Список моделей</h2>
+                <span>Всего: {{ total_models }}</span>
+            </div>
+
+            <button type="button"
+                    class="model_add_button"
+                    id="openModelModal">
+                + Добавить модель
+            </button>
+        </div>
+
+        <form method="get" class="models_search_form">
+            <input type="search"
+                   name="search"
+                   value="{{ search }}"
+                   placeholder="Название или производитель..."
+                   class="models_search_input">
+
+            <button type="submit" class="models_search_button">
+                Найти
+            </button>
+        </form>
+
+        <div class="models_table_wrapper">
+            <table class="models_table">
+                <thead>
+                    <tr>
+                        <th>Модель</th>
+                        <th>Производитель</th>
+                        <th>Тип устройства</th>
+                        <th>Статус</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for model in device_models %}
+                    <tr>
+                        <td class="model_name">{{ model.name }}</td>
+                        <td>{{ model.manufacturer }}</td>
+                        <td>{{ model.device_type }}</td>
+                        <td>
+                            <span class="model_status
+                                {% if model.is_active %}model_active{% else %}model_inactive{% endif %}">
+                                {% if model.is_active %}Активна{% else %}Неактивна{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="model_description"
+                                  title="{{ model.description }}">
+                                {{ model.description|truncatechars:40 }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="models_empty">
+                            Модели не найдены.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+</div>
+
+<div class="model_modal_overlay" id="modelModal" hidden>
+    <div class="model_modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modelModalTitle">
+
+        <div class="model_modal_header">
+            <div>
+                <h2 id="modelModalTitle">Новая модель</h2>
+                <p>Добавление модели в каталог TestFlow</p>
+            </div>
+            <button type="button"
+                    class="model_modal_close"
+                    id="closeModelModal"
+                    aria-label="Закрыть">&times;</button>
+        </div>
+
+        <form method="post"
+              action="{% url 'add_device_model' %}"
+              class="model_modal_form">
+            {% csrf_token %}
+
+            <div class="model_modal_field">
+                <label for="model_name">Название модели</label>
+                <input id="model_name"
+                       name="name"
+                       maxlength="100"
+                       placeholder="Например, Aquarius NS685U"
+                       required>
+            </div>
+
+            <div class="model_modal_field">
+                <label for="model_manufacturer">Производитель</label>
+                <input id="model_manufacturer"
+                       name="manufacturer"
+                       maxlength="100"
+                       placeholder="Например, Aquarius"
+                       required>
+            </div>
+
+            <div class="model_modal_field">
+                <label for="model_type">Тип устройства</label>
+                <select id="model_type"
+                        name="device_type"
+                        required>
+                    <option value="">Выберите тип</option>
+                    <option value="Ноутбук">Ноутбук</option>
+                    <option value="ПК">ПК</option>
+                    <option value="Моноблок">Моноблок</option>
+                    <option value="Сервер">Сервер</option>
+                    <option value="Планшет">Планшет</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+
+            <div class="model_modal_field">
+                <label for="model_description">
+                    Описание (необязательно)
+                </label>
+                <textarea id="model_description"
+                          name="description"
+                          rows="3"
+                          placeholder="Дополнительная информация о модели"></textarea>
+            </div>
+
+            <div class="model_modal_actions">
+                <button type="button"
+                        class="model_modal_cancel"
+                        id="cancelModelModal">
+                    Отмена
+                </button>
+                <button type="submit" class="model_modal_submit">
+                    Добавить модель
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("modelModal");
+    const openButton = document.getElementById("openModelModal");
+    const closeButton = document.getElementById("closeModelModal");
+    const cancelButton = document.getElementById("cancelModelModal");
+    const nameInput = document.getElementById("model_name");
+
+    function openModal() {
+        modal.hidden = false;
+        nameInput.focus();
+    }
+
+    function closeModal() {
+        modal.hidden = true;
+        openButton.focus();
+    }
+
+    openButton.addEventListener("click", openModal);
+    closeButton.addEventListener("click", closeModal);
+    cancelButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+});
+</script>
+{% endblock %}

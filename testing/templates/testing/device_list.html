@@ -1,0 +1,225 @@
+
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/devices.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="devices_page">
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == "device" %}
+                <div class="device_notice">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <header class="devices_header">
+        <span class="devices_breadcrumb">
+            УСТРОЙСТВА
+        </span>
+
+        <h1>Устройства</h1>
+        <p>Реестр оборудования TestSystem</p>
+    </header>
+
+    <section class="devices_panel">
+
+        <div class="devices_toolbar">
+
+            <div class="devices_toolbar_title">
+                <h2>Список устройств</h2>
+                <span>Всего: {{ total_devices }}</span>
+            </div>
+            <button type="button" class="device_add_button" id="openDeviceModal">
+                + Добавить устройство
+            </button>
+        </div>
+        <form method="get" class="devices_search_form">
+            <input
+                type="search"
+                name="search"
+                value="{{ search }}"
+                placeholder="Поиск по серийному номеру..."
+                class="devices_search_input">
+            <button type="submit" class="devices_search_button">
+                Найти
+            </button>
+        </form>
+        <div class="devices_table_wrapper">
+            <table class="devices_table">
+                <thead>
+                    <tr>
+                        <th>Серийный номер</th>
+                        <th>Модель</th>
+                        <th>Статус</th>
+                        <th>Дата добавления</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for device in devices %}
+
+                    <tr>
+                        <td class="device_serial">
+                            {{ device.serial_number }}
+                        </td>
+
+                        <td>
+                            {{ device.model.name }}
+                        </td>
+
+                        <td>
+                            <span class="device_status_badge
+                                {% if device.status == 'passed' %}
+                                    device_status_passed
+                                {% elif device.status == 'failed' %}
+                                    device_status_failed
+                                {% elif device.status == 'testing' %}
+                                    device_status_testing
+                                {% else %}
+                                    device_status_pending
+                                {% endif %}
+                            ">
+                                {{ device.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td class="device_date">
+                            {{ device.created_at|date:"d.m.Y H:i" }}
+                        </td>
+
+                        <td class="device_actions">
+                            <a href="{% url 'test_session' %}?serial_number={{ device.serial_number|urlencode }}"
+                               class="device_open_button">
+                                Открыть
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="devices_empty">
+                            Устройства не найдены.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+<div class="device_modal_overlay"
+     id="deviceModal"
+     hidden>
+    <div class="device_modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="deviceModalTitle">
+        <div class="device_modal_header">
+            <div>
+                <h2 id="deviceModalTitle">Новое устройство</h2>
+                <p>Добавление устройства в реестр TestFlow</p>
+            </div>
+            <button type="button"
+                    class="device_modal_close"
+                    id="closeDeviceModal"
+                    aria-label="Закрыть">
+                &times;
+            </button>
+        </div>
+        <form method="post"
+              action="{% url 'add_device' %}"
+              class="device_modal_form">
+
+            {% csrf_token %}
+
+            <div class="device_modal_field">
+                <label for="new_serial">
+                    Серийный номер
+                </label>
+                <input
+                    type="text"
+                    id="new_serial"
+                    name="serial_number"
+                    maxlength="100"
+                    placeholder="Например, SN009"
+                    required>
+            </div>
+            <div class="device_modal_field">
+                <label for="new_model">
+                    Модель устройства
+                </label>
+                <select id="new_model"
+                        name="model_id"
+                        required>
+                    <option value="">Выберите модель</option>
+                    {% for model in device_models %}
+                        <option value="{{ model.pk }}">
+                            {{ model.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="device_modal_actions">
+                <button type="button"
+                        class="device_modal_cancel"
+                        id="cancelDeviceModal">
+                    Отмена
+                </button>
+                <button type="submit"
+                        class="device_modal_submit">
+                    Добавить устройство
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("deviceModal");
+    const openButton = document.getElementById("openDeviceModal");
+    const closeButton = document.getElementById("closeDeviceModal");
+    const cancelButton = document.getElementById("cancelDeviceModal");
+    const serialInput = document.getElementById("new_serial");
+
+    function openModal() {
+        modal.hidden = false;
+        serialInput.focus();
+    }
+
+    function closeModal() {
+        modal.hidden = true;
+        openButton.focus();
+    }
+
+    openButton.addEventListener("click", openModal);
+    closeButton.addEventListener("click", closeModal);
+    cancelButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,303 @@
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/plan_settings.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<header class="testing_header">
+    <span class="page_breadcrumb">
+        НАСТРОЙКИ
+    </span>
+
+    <h1 class="page_title">
+        План тестирования
+    </h1>
+</header>
+
+
+<section class="device_select">
+    <form method="get" class="device_form">
+
+        <label for="model_id" class="field_label">
+            Модель устройства
+        </label>
+
+        <select id="model_id" name="model_id" class="model_device_select" onchange="this.form.requestSubmit()">
+            {% for item in models %}
+            <option value="{{ item.pk }}" {% if selected_model.pk == item.pk %}selected{% endif %}>
+                {{ item.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <noscript>
+            <button type="submit">Выбрать модель</button>
+        </noscript>
+
+    </form>
+</section>
+
+<section class="device_select">
+    <div class="test_list">
+        <h2 class="sub_title">Фазы тестирования</h2>
+
+        <ul class="list_test_run" id="phase-list">
+            {% for model_phase in phases %}
+            <li class="item_list_run" data-phase-id="{{ model_phase.pk }}">
+                    <div class="icon"></div>
+
+                    <div class="display_discription">
+                        <h2>
+                            {{ model_phase.order }}.
+                            {{ model_phase.phase.name }}
+                        </h2>
+
+                        <span>
+                            {{ model_phase.phase.code }}
+                        </span>
+                    </div>
+
+                    
+                    <form
+                        method="post"
+                        action="{% url 'delete_plan_phase' %}"
+                        class="delete_test_form"
+                        onsubmit="return confirm('Удалить эту фазу из плана?');"
+                    >
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="model_phase_id"
+                            value="{{ model_phase.pk }}"
+                        >
+
+                        <button
+                            type="submit"
+                            class="delete_test_button"
+                            title="Удалить фазу"
+                        >
+                            ×
+                        </button>
+                    </form>
+
+
+                    <ul class="list_test" data-model-phase-id="{{ model_phase.pk }}">
+                        {% for tests in model_phase.tests.all %}
+                        <li class="test_element" data-test-id="{{ tests.pk }}">
+                            <div class="icon"></div>
+                            <div class="info_about_test">
+                                <h2 class="sub_title">{{ tests.test.name }}</h2>
+                                <span class="discription">{{ tests.test.code }}</span>
+                            </div>
+                            
+                            <form
+                                method="post"
+                                action="{% url 'delete_plan_test' %}"
+                                class="delete_test_form"
+                                onsubmit="return confirm('Удалить тест из этой фазы?');"
+                            >
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="plan_item_id"
+                                    value="{{ tests.pk }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="delete_test_button"
+                                    title="Удалить тест из плана"
+                                >
+                                    ×
+                                </button>
+                            </form>
+
+                        </li>
+                        {% empty %}
+                            <li class="empty_tests">
+                                В этой фазе пока нет тестов.
+                            </li>
+                        {% endfor %}
+                        
+                        <li class="add_eliment">
+                            <form method="post" action="{% url 'add_plan_test' %}" class="add_test_form">
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="model_phase_id"
+                                    value="{{ model_phase.pk }}"
+                                >
+
+                                <select name="test_id" required class="add_test_select">
+                                    <option value="">Выберите тест</option>
+
+                                    {% for test in available_tests %}
+                                        <option value="{{ test.pk }}">
+                                            {{ test.name }} ({{ test.code }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                <button type="submit" class="add_test_button">
+                                    + Добавить тест
+                                </button>
+                            </form>
+                        </li>
+
+                    </ul>
+
+                </li>
+            {% empty %}
+                <li>Для этой модели нет этапов тестирования.</li>
+            {% endfor %}
+
+
+            <li class="add_phase_element">
+                <form
+                    method="post"
+                    action="{% url 'add_plan_phase' %}"
+                    class="add_phase_form"
+                >
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="model_id"
+                        value="{{ selected_model.pk }}"
+                    >
+
+                    <select name="phase_id" required class="add_test_select">
+                        <option value="">Выберите фазу</option>
+
+                        {% for phase in available_phases %}
+                            <option value="{{ phase.pk }}">
+                                {{ phase.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="add_test_button">
+                        + Добавить фазу
+                    </button>
+                </form>
+            </li>
+
+
+        </ul>
+    </div>
+</section>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const phaseList = document.getElementById("phase-list");
+
+    if (!phaseList || typeof Sortable === "undefined") return;
+
+    new Sortable(phaseList, {
+        handle: ".display_discription",
+        animation: 150,
+        draggable: ".item_list_run",
+        filter: "button, input, select, form",
+        preventOnFilter: false,
+
+        onEnd: async function (event) {
+            if (event.oldIndex === event.newIndex) return;
+
+            const phaseIds = Array.from(
+                phaseList.querySelectorAll(":scope > .item_list_run")
+            ).map(element => Number(element.dataset.phaseId));
+
+            try {
+                const response = await fetch("{% url 'reorder_phases' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        phase_ids: phaseIds
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Не удалось сохранить порядок");
+                }
+
+                // Обновляем номера фаз на странице
+                window.location.reload();
+
+            } catch (error) {
+                alert(error.message);
+                window.location.reload();
+            }
+        }
+    });
+});
+
+
+document.querySelectorAll(".list_test").forEach(testList => {
+    new Sortable(testList, {
+        animation: 150,
+        draggable: ".test_element",
+
+        // Не перетаскиваем при нажатии на кнопки
+        filter: "button, input, select, form",
+        preventOnFilter: false,
+
+        onEnd: async function (event) {
+            if (event.oldIndex === event.newIndex) return;
+
+            const testIds = Array.from(
+                testList.querySelectorAll(":scope > .test_element")
+            ).map(element => Number(element.dataset.testId));
+
+            const modelPhaseId = Number(
+                testList.dataset.modelPhaseId
+            );
+
+            try {
+                const response = await fetch(
+                    "{% url 'reorder_tests' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify({
+                            model_phase_id: modelPhaseId,
+                            test_ids: testIds
+                        })
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Не удалось сохранить порядок тестов");
+                }
+
+                window.location.reload();
+
+            } catch (error) {
+                alert(error.message);
+                window.location.reload();
+            }
+        }
+    });
+});
+
+
+
+</script>
+
+<!-- Информация об устройстве -->
+{% endblock %}

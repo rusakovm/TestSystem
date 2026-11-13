@@ -1,0 +1,176 @@
+
+/* Боковая панель */
+
+.aside_panel {
+    width: 230px;
+    min-width: 230px;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+
+    padding: 24px 12px;
+
+    background-color: #16232d;
+}
+
+/* Логотип */
+
+.aside_header {
+    padding: 8px 12px;
+}
+
+.aside_header h2 {
+    margin: 0;
+
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0f4f7;
+}
+
+/* Навигация */
+
+.aside_main {
+    flex: 1;
+}
+
+.nav_list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.nav_list_element {
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.element_link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 52px;
+    padding: 12px;
+
+    color: #94a7b4;
+    text-decoration: none;
+
+    border-radius: 10px;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.element_link:hover {
+    background-color: #213944;
+    color: #f0f4f7;
+}
+
+.element_link:hover .link_text {
+    color: inherit;
+}
+
+/* Активный пункт */
+
+.element_link.active {
+    background-color: #28434a;
+    color: #55d7af;
+}
+
+/* Текст */
+
+.link_text {
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: inherit;
+}
+
+/* Временные иконки */
+.element_link .icon {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    background-color: #263754;
+    border-radius: 9px;
+}
+/* Нижняя часть */
+
+.aside_footer {
+    margin-top: auto;
+}
+.aside_footer {
+    margin-top: auto;
+    padding: 16px;
+}
+
+.sidebar_user {
+    padding: 16px;
+    background: #1d2d39;
+    border: 1px solid #344958;
+    border-radius: 12px;
+}
+
+.sidebar_user_info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.sidebar_user_label {
+    font-size: 12px;
+    color: #91a5b5;
+}
+
+.sidebar_user_info strong {
+    color: #e8f0f5;
+    font-size: 14px;
+}
+
+.sidebar_logout {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #426071;
+    border-radius: 8px;
+    color: #fca5a5;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sidebar_logout:hover {
+    background: #592b35;
+    border-color: #f87171;
+}
+.aside_panel {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.aside_main {
+    flex: 1;
+}
+.aside_footer {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+.aside_panel {
+    scrollbar-width: none;
+}
+
+.aside_panel::-webkit-scrollbar {
+    display: none;
+}

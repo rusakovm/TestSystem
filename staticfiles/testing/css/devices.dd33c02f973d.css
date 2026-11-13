@@ -1,0 +1,246 @@
+
+/* ===== СТРАНИЦА УСТРОЙСТВ ===== */
+
+.devices_page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    box-sizing: border-box;
+    color: #e8f0f5;
+}
+
+.devices_header {
+    margin-bottom: 32px;
+}
+
+.devices_breadcrumb {
+    display: block;
+    color: #8fa4b5;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    margin-bottom: 18px;
+}
+
+.devices_header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.devices_header p {
+    color: #91a5b5;
+    margin: 0;
+    font-size: 15px;
+}
+
+/* ===== ОСНОВНАЯ ПАНЕЛЬ ===== */
+
+.devices_panel {
+    background: #1d2d39;
+    border: 1px solid #344958;
+    border-radius: 14px;
+    padding: 26px;
+}
+
+.devices_toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.devices_toolbar_title h2 {
+    margin: 0 0 6px;
+    font-size: 21px;
+}
+
+.devices_toolbar_title span {
+    font-size: 13px;
+    color: #91a5b5;
+}
+
+.device_add_button {
+    padding: 12px 18px;
+    background: #4dd4b0;
+    border: none;
+    border-radius: 9px;
+    color: #10242b;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.device_add_button:hover:not(:disabled) {
+    background: #67e8c4;
+}
+
+.device_add_button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== ПОИСК ===== */
+
+.devices_search_form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.devices_search_input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 16px;
+    background: #15242e;
+    border: 1px solid #344958;
+    border-radius: 9px;
+    color: #e8f0f5;
+    font-size: 14px;
+    outline: none;
+}
+
+.devices_search_input:focus {
+    border-color: #4dd4b0;
+}
+
+.devices_search_input::placeholder {
+    color: #748b9b;
+}
+
+.devices_search_button {
+    padding: 12px 20px;
+    background: #2c4654;
+    border: 1px solid #426071;
+    border-radius: 9px;
+    color: #e8f0f5;
+    cursor: pointer;
+}
+
+/* ===== ТАБЛИЦА ===== */
+
+.devices_table_wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.devices_table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.devices_table th {
+    padding: 14px 16px;
+    color: #91a5b5;
+    font-size: 12px;
+    font-weight: 600;
+    border-bottom: 1px solid #344958;
+}
+
+.devices_table td {
+    padding: 18px 16px;
+    border-bottom: 1px solid #304350;
+    font-size: 14px;
+}
+
+.devices_table tbody tr:hover {
+    background: #243846;
+}
+
+.devices_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.device_serial {
+    font-weight: 700;
+    color: #f1f7fa;
+}
+
+.device_date {
+    color: #91a5b5;
+}
+
+/* ===== СТАТУСЫ ===== */
+
+.device_status_badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.device_status_pending {
+    color: #cbd5e1;
+    background: #35414b;
+}
+
+.device_status_testing {
+    color: #7dd3fc;
+    background: #153b50;
+}
+
+.device_status_passed {
+    color: #6ee7b7;
+    background: #174b3b;
+}
+
+.device_status_failed {
+    color: #fda4af;
+    background: #50232d;
+}
+
+/* ===== ДЕЙСТВИЯ ===== */
+
+.device_actions {
+    text-align: right;
+}
+
+.device_open_button {
+    display: inline-block;
+    padding: 9px 15px;
+    border: 1px solid #426071;
+    border-radius: 8px;
+    color: #b9e8e0;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.device_open_button:hover {
+    background: #2c4654;
+}
+
+.devices_empty {
+    text-align: center;
+    color: #91a5b5;
+    padding: 45px !important;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+
+@media (max-width: 700px) {
+    .devices_page {
+        padding: 16px;
+    }
+
+    .devices_panel {
+        padding: 16px;
+    }
+
+    .devices_toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .devices_search_form {
+        flex-direction: column;
+    }
+
+    .devices_table {
+        min-width: 700px;
+    }
+}

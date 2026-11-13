@@ -1,0 +1,115 @@
+
+{% extends "testing/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'testing/css/history.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="history_page">
+
+    <header class="history_header">
+        <span class="history_breadcrumb">
+            ИСТОРИЯ
+        </span>
+        <h1>История тестирований</h1>
+        <p>Журнал проведённых проверок оборудования</p>
+    </header>
+
+    <div class="history_stats">
+        <div class="history_stat">
+            <span>Всего сессий</span>
+            <strong>{{ total_sessions }}</strong>
+        </div>
+        <div class="history_stat">
+            <span>Успешно</span>
+            <strong>{{ passed_sessions }}</strong>
+        </div>
+        <div class="history_stat">
+            <span>С ошибками</span>
+            <strong>{{ failed_sessions }}</strong>
+        </div>
+    </div>
+    <section class="history_panel">
+        <div class="history_panel_header">
+            <h2>Журнал тестирований</h2>
+            <span>Все записи</span>
+        </div>
+        <form method="get" class="history_filters">
+            <input type="search"
+                   name="search"
+                   value="{{ search }}"
+                   placeholder="Серийный номер или модель...">
+
+            <select name="status">
+                <option value="">Все статусы</option>
+                <option value="running" {% if selected_status == "running" %}selected{% endif %}>В процессе</option>
+                <option value="passed" {% if selected_status == "passed" %}selected{% endif %}>Пройдено</option>
+                <option value="failed" {% if selected_status == "failed" %}selected{% endif %}>Ошибка</option>
+                <option value="cancelled" {% if selected_status == "cancelled" %}selected{% endif %}>Отменено</option>
+            </select>
+            <button type="submit">Найти</button>
+            <a href="{% url 'history' %}" class="history_reset">
+                Сбросить
+            </a>
+        </form>
+        <div class="history_table_wrapper">
+            <table class="history_table">
+                <thead>
+                    <tr>
+                        <th>Сессия</th>
+                        <th>Серийный номер</th>
+                        <th>Модель</th>
+                        <th>Дата начала</th>
+                        <th>Прогресс</th>
+                        <th>Результат</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in sessions %}
+                    <tr>
+                        <td class="history_id">#{{ session.pk }}</td>
+
+                        <td class="history_serial">
+                            {{ session.device.serial_number }}
+                        </td>
+
+                        <td>{{ session.device.model.name }}</td>
+
+                        <td>
+                            {{ session.started_at|date:"d.m.Y H:i" }}
+                        </td>
+
+                        <td>
+                            {{ session.passed_tests }}/{{ session.total_tests }}
+                        </td>
+
+                        <td>
+                            <span class="history_badge
+                                history_{{ session.status }}">
+                                {{ session.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a class="history_open"
+                               href="{% url 'history_detail' session.pk %}">
+                                Подробнее
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="history_empty">
+                            Записей пока нет.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
